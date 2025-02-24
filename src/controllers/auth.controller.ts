@@ -19,15 +19,7 @@ export class AuthController {
             throw new HttpException('Invalid email or password', 401);
         }
 
-        const access = this.jwtService.sign({email}, {
-            expiresIn: '120s', secret: jwtConstants.access,
-        });
-
-        const refresh = this.jwtService.sign({email}, {
-            expiresIn: '7d', secret: jwtConstants.refresh,
-        });
-
-        return {access, refresh};
+        return this.generateTokens(email);
     }
 
     @Post('refresh')
@@ -42,6 +34,10 @@ export class AuthController {
         }
 
         const {email} = this.jwtService.decode(refresh) as { email: string };
+        return this.generateTokens(email);
+    }
+
+    generateTokens(email: string) {
         const access = this.jwtService.sign({email}, {
             expiresIn: '120s', secret: jwtConstants.access,
         });
