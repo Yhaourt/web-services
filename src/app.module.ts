@@ -1,8 +1,13 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './controllers/app.controller';
-import { AppService } from './services/app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { HelloEntity } from './entities/hello.entity';
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {CourseEntity} from "./entities/course.entity";
+import {StudentEntity} from "./entities/student.entity";
+import {EnrollmentEntity} from "./entities/enrollment.entity";
+import {StudentController} from "./controllers/student.controller";
+import {CourseController} from "./controllers/course.controller";
+import {StudentService} from "./services/student.service";
+import {CourseService} from "./services/course.service";
+import {EnrollmentService} from "./services/enrollment.service";
 
 @Module({
     imports: [
@@ -13,13 +18,13 @@ import { HelloEntity } from './entities/hello.entity';
             username: 'pguser',
             password: 'pgpass',
             database: 'pgdb',
-            entities: [HelloEntity],
+            entities: [CourseEntity, StudentEntity, EnrollmentEntity],
             synchronize: true,
         }),
-      TypeOrmModule.forFeature([HelloEntity]),
+        TypeOrmModule.forFeature([CourseEntity, StudentEntity, EnrollmentEntity]),
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [StudentController, CourseController],
+    providers: [StudentService, CourseService, EnrollmentService],
 })
 export class AppModule {
 }
