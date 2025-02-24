@@ -1,7 +1,8 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
 import {StudentService} from '../services/student.service';
 import {StudentDto} from '../dtos/student.dto';
 import {EnrollmentService} from "../services/enrollment.service";
+import {JwtAuthGuard} from "../auth/jwt.auth.guard";
 
 @Controller('students')
 export class StudentController {
@@ -12,6 +13,7 @@ export class StudentController {
     }
 
     @Get()
+    @UseGuards(JwtAuthGuard)
     async findAll() {
         return this.studentService.findAll();
     }

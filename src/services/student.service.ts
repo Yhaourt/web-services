@@ -3,6 +3,7 @@ import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {StudentEntity} from '../entities/student.entity';
 import {StudentDto} from '../dtos/student.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class StudentService {
@@ -26,7 +27,8 @@ export class StudentService {
     }
 
     async create(studentData: StudentDto): Promise<StudentEntity> {
-        const student = this.studentRepository.create(studentData);
+        const hashedPassword = await bcrypt.hash(studentData.password, 10);
+        const student = this.studentRepository.create({...studentData, password: hashedPassword});
         return this.studentRepository.save(student);
     }
 
@@ -36,5 +38,10 @@ export class StudentService {
 
     async delete(id: string): Promise<DeleteResult> {
         return this.studentRepository.delete(id);
+    }
+
+    async authorize(email: string, password: string): Promise<boolean> {
+        const student = await this.studentRepository.findOne({where: {email}});
+        return await bcrypt.compare(password, student.password);
     }
 }
