@@ -8,18 +8,12 @@ import {CourseController} from "./controllers/course.controller";
 import {StudentService} from "./services/student.service";
 import {CourseService} from "./services/course.service";
 import {EnrollmentService} from "./services/enrollment.service";
-import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
 import {AuthController} from "./controllers/auth.controller";
-import {jwtConstants} from "./auth/constants";
 
 @Module({
     imports: [
-        PassportModule.register({defaultStrategy: 'jwt'}),
-        JwtModule.register({
-            secret: jwtConstants.access,
-            signOptions: {expiresIn: '60s'},
-        }),
+        JwtModule.register({}),
         TypeOrmModule.forRoot({
             type: 'postgres',
             host: 'localhost',
